@@ -23,6 +23,6 @@
                 }
         }
     },
-    "postCreateCommand": "pip install -r requirements.txt && echo 'datawise-decisions dev container is ready!'"
+    "postCreateCommand": "python3 -m pip install -e \".[dev]\" && echo 'datawise-decisions dev container is ready!'"
 }
 

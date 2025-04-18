@@ -1,8 +1,0 @@
-# Core Jupyter stack
-ipykernel       # IPython Kernel for Jupyter
-
-# Data Science 
-pandas
-
-# Testing
-pytest

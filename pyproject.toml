@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "datawise-decisions"
+version = "0.1.0"
+description = "Portfolio project for data science and predictive maintenance"
+authors = [{name = "Ephraim Eckl", email = "e.eckl@posteo.de"}]
+readme = {file = "README.md", content-type = "text/markdown"}
+license = { file = "LICENSE" }
+dependencies = ["pandas"]
+
+[project.optional-dependencies]
+dev = ["ipython", "pytest"]
+
+[project.scripts]
+seersees = "datawise_decisions.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["./src"]
