@@ -2,7 +2,8 @@
     "name": "datawise-decisions",
     "build": {
         "dockerfile": "Dockerfile",
-        "context": ".."
+        "context": "..",
+        "target": "dev"
     },
     "customizations": {
         "vscode": {
