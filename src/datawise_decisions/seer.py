@@ -8,5 +8,5 @@ def see_rul(a = 5, b = 4):
     """
     Remaining Useful Live (RUL) function placeholder.
     """
-    print(int(a) + int(b))
-    return
+    c = int(a) + int(b)
+    return c
