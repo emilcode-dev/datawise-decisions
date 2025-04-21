@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "datawise-decisions"
@@ -9,16 +9,21 @@ description = "Portfolio project for data science and predictive maintenance"
 authors = [{name = "Ephraim Eckl", email = "e.eckl@posteo.de"}]
 readme = {file = "README.md", content-type = "text/markdown"}
 license = { file = "LICENSE" }
-dependencies = ["pandas"]
+dependencies = [
+    python = "^3.11"
+    pandas = "2.2.2"
+    numpy = "1.26.4"
+    scikit-learn = "1.4.2"
+    ]
 
-[project.optional-dependencies]
-dev = ["ipython", "pytest"]
+[project.urls]
+repository = "https://github.com/emilcode-dev/datawise-decisions"
 
-[project.scripts]
-seersees = "datawise_decisions.__main__:main"
-
-[tool.setuptools.packages.find]
-where = ["./src"]
+[tool.poetry.group.dev.dependencies]
+pytest = "8.1.1"
+ipython = "8.23.0"
+matplotlib = "3.8.4"
+seaborn = "0.13.2"
 
 [tool.pytest.ini_options]
 minversion = "6.0"

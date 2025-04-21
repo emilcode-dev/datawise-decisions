@@ -3,7 +3,7 @@
     "build": {
         "dockerfile": "Dockerfile",
         "context": "..",
-        "target": "dev"
+        "target": "development"
     },
     "customizations": {
         "vscode": {
@@ -23,6 +23,6 @@
                 }
         }
     },
-    "postCreateCommand": "python3 -m pip install -e \".[dev]\" && echo 'datawise-decisions dev container is ready!'"
+    "postCreateCommand": "poetry install --with dev && echo 'datawise-decisions dev container is ready!'"
 }
 
