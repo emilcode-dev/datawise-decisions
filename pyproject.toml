@@ -9,21 +9,26 @@ description = "Portfolio project for data science and predictive maintenance"
 authors = [{name = "Ephraim Eckl", email = "e.eckl@posteo.de"}]
 readme = {file = "README.md", content-type = "text/markdown"}
 license = { file = "LICENSE" }
+requires-python = ">=3.11"
 dependencies = [
-    python = "^3.11"
-    pandas = "2.2.2"
-    numpy = "1.26.4"
-    scikit-learn = "1.4.2"
-    ]
+    "pandas==2.2.2",
+    "numpy==1.26.4",
+    "scikit-learn==1.4.2"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.1.1",
+    "ipython==8.23.0",
+    "matplotlib==3.8.4",
+    "seaborn==0.13.2"
+]
+
+[project.scripts]
+seersees = "datawise_decisions.__main__:main"
 
 [project.urls]
 repository = "https://github.com/emilcode-dev/datawise-decisions"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "8.1.1"
-ipython = "8.23.0"
-matplotlib = "3.8.4"
-seaborn = "0.13.2"
 
 [tool.pytest.ini_options]
 minversion = "6.0"

@@ -1,83 +1,64 @@
-# Use Ubuntu 24.04 LTS as the base image
-FROM python:3.11 as base
+FROM python:3.11-slim AS base
 LABEL maintainer="emilcode-dev"
 
-    # python
-    ENV PYTHONUNBUFFERED=1 \
-    # prevents python creating .pyc files
-    PYTHONDONTWRITEBYTECODE=1 \
-    \
-    # pip
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    \
-    # poetry
-    # https://python-poetry.org/docs/configuration/#using-environment-variables
-    POETRY_VERSION=1.8.2 \
-    # make poetry install to this location
+# poetry
+# https://python-poetry.org/docs/configuration/#using-environment-variables
+ENV POETRY_VERSION=2.1.2 \
     POETRY_HOME="/opt/poetry" \
-    # make poetry create the virtual environment in the project's root
-    # it gets named `.venv`
-    POETRY_VIRTUALENVS_IN_PROJECT=true \
     # do not ask any interactive question
-    POETRY_NO_INTERACTION=1 \
-    \
-    # paths
-    # this is where our requirements + virtual environment will live
-    PYSETUP_PATH="/opt/pysetup" \
-    VENV_PATH="/opt/pysetup/.venv"
+    POETRY_NO_INTERACTION=1
 
+ENV PATH="$POETRY_HOME/bin:$PATH"
 
-# prepend poetry and venv to path
-ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
-
-
-
-
-# `builder-base` stage is used to build deps + create our virtual environment
-FROM base as builder
-RUN apt-get update && apt-get install -y --no-install-recommends\
-        # deps for installing poetry
-        curl \
-        # deps for building python deps
-        build-essential \
-        && rm -rf /var/lib/apt/lists/*
+# Install system dependencies and Poetry
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl build-essential && \
+        rm -rf /var/lib/apt/lists/*
 
 # install poetry - respects $POETRY_VERSION & $POETRY_HOME
-curl -sSL https://install.python-poetry.org | python3 -
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
-# copy project requirement files here to ensure they will be cached.
-WORKDIR $PYSETUP_PATH
-COPY poetry.lock pyproject.toml ./
+# -------- Builder stage --------
+# FROM base AS builder
 
-# install runtime deps - uses $POETRY_VIRTUALENVS_IN_PROJECT internally
-RUN poetry install --only main
+# WORKDIR /app
+# COPY pyproject.toml poetry.lock LICENSE README.md ./
 
+# # Install only runtime dependencies (without dev dependencies)
+# RUN poetry config virtualenvs.create false && \
+#         poetry install --only main --no-root
 
-# `development` image is used during development / testing
-FROM base as development
+# -------- Development stage --------
+FROM base AS development
 
-RUN apt-get update && apt-get install -y --no-install-recommends\
-        git \
-        && rm -rf /var/lib/apt/lists/*  
+# Additional dev tooling (e.g. Git, etc.)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git && \
+        rm -rf /var/lib/apt/lists/*
 
-WORKDIR $PYSETUP_PATH
-
-# copy in our built poetry + venv
-COPY --from=builder $POETRY_HOME $POETRY_HOME
-COPY --from=builder $PYSETUP_PATH $PYSETUP_PATH
-
-# quicker install as runtime deps are already installed
-RUN poetry install --with dev
-
-# will become mountpoint of our code
 WORKDIR /app
 
+# COPY pyproject.toml poetry.lock LICENSE README.md ./
+# RUN poetry install with dev --no-root
 
-# # `production` image used for runtime
-# FROM base as production
+# CMD to launch bash in the dev container
+CMD ["bash"]
 
-# COPY --from=builder $PYSETUP_PATH $PYSETUP_PATH
-# COPY ./app /app/
+# -------- Production stage --------
+# FROM python:3.12-slim AS production
+
+# # Copy runtime dependencies from builder
+# COPY --from=builder /usr/local/lib/python3.12 /usr/local/lib/python3.12
+# COPY --from=builder /usr/local/bin /usr/local/bin
+
 # WORKDIR /app
+
+# # Copy application code
+# COPY . .
+
+# # Use non-root user for security
+# RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
+# USER appuser
+
+# CMD ["python", "main.py"]
+        

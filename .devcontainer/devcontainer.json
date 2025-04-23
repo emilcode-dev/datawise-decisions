@@ -23,6 +23,6 @@
                 }
         }
     },
-    "postCreateCommand": "poetry install --with dev && echo 'datawise-decisions dev container is ready!'"
+    "postCreateCommand": "poetry install -E dev && echo 'datawise-decisions dev container is ready!'"
 }
 
