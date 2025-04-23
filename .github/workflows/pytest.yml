@@ -16,4 +16,4 @@ jobs:
       - name: Run inside Dev Container
         uses: devcontainers/ci@v0.3
         with:
-          runCmd: pytest
+          runCmd: poetry run pytest
