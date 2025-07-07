@@ -21,7 +21,8 @@ dev = [
     "pytest==8.1.1",
     "ipython==8.23.0",
     "matplotlib==3.8.4",
-    "seaborn==0.13.2"
+    "seaborn==0.13.2",
+    "ipykernel==6.29.5"
 ]
 
 [project.scripts]
