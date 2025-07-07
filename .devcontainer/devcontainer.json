@@ -15,7 +15,8 @@
                 "ms-toolsai.datawrangler",
                 "ms-python.vscode-pylance",
                 "charliermarsh.ruff",
-                "github.copilot"
+                "github.copilot",
+                "njpwerner.autodocstring"
             ],
             "settings": {
                 // Enable interactive window mode
@@ -23,6 +24,8 @@
                 }
         }
     },
-    "postCreateCommand": "poetry install -E dev && echo 'datawise-decisions dev container is ready!'"
+    "postCreateCommand": 
+            "poetry install -E dev && poetry run python -m ipykernel install --user --name notebook-devcontainer && echo 'datawise-decisions dev container is ready!'"
+
 }
 
